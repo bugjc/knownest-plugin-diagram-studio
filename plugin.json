@@ -1,0 +1,69 @@
+{
+  "id": "diagram-studio",
+  "name": "画图工坊",
+  "version": "0.7.1",
+  "description": "结构化画图：四类图型差异化渲染（形状/颜色/自动布局），插件页画布手绘（撤销重做/样式面板/PNG 导出）+ agent 对话直操作画图 API，图真源存知识库文档（diagram-json 方言），节点可挂链知识文档、图可确定性出题入库（零 LLM）、可默画复习（主动回忆，SM-2 随文档调度），可导出 mermaid",
+  "entry": "index.js",
+  "permissions": [
+    "agent:tools",
+    "file:read",
+    "file:write",
+    "db:read",
+    "ai:chat"
+  ],
+  "consumes": [
+    {
+      "asset": "quiz-maker/questions",
+      "optional": true
+    }
+  ],
+  "contributions": [
+    {
+      "point": "nav.entry",
+      "slot": "nav.sidebar",
+      "key": "diagram-studio",
+      "action": "$t{diagram-studio.nav.diagram-studio}",
+      "method": "pageDiagrams",
+      "icon": "graph",
+      "order": 8
+    }
+  ],
+  "usage": "$t{diagram-studio.usage}",
+  "agentTools": [
+    {
+      "name": "operate_diagram"
+    },
+    {
+      "name": "generate_diagram"
+    }
+  ],
+  "i18n": {
+    "zh-CN": {
+      "diagram-studio.nav.diagram-studio": "画图工坊",
+      "diagram-studio.usage": "**能干什么**：结构化画图工坊——四类图型（流程图/架构图/思维导图/协作图）差异化渲染，插件页内置交互画布（拖节点/连线/改文字/换形状颜色/撤销重做/一键自动布局/PNG 导出），agent 对话直操作画图 API，文档里的 mermaid 图块可一键「转画布」变成可编辑画布图，节点可挂链知识文档（角标点击直达），图可确定性出题（排序/填空）入库进复习闭环，图真源存知识库文档，可导出 mermaid。\n\n**怎么用**：\n1. 侧边栏「画图工坊」→ 新建图（选图类型）→ 点列表行进入画布手画（拖拽/连线/双击改字、选中节点换形状颜色/挂文档、Ctrl+Z 撤销、自动布局一键排版、导出 PNG，保存回写文档）；\n2. 对白泽说「画一张登录流程图：输入账号→校验→进入首页」，白泽调画图 API 逐步建图（含形状颜色），生成即自动排版；\n3. 对白泽说「把这篇《文档》生成思维导图」，整体生成后可继续手调；\n4. 文档预览里 mermaid 图右上角「转画布」（或对白泽说「把这篇文档的图转成画布图」），mermaid 块即变可编辑画布图；\n5. 画布里选中节点「挂文档…」把节点链到知识库文档（点 📄 角标直达，悬空可一键解链）；对白泽说「用这张图出题」即确定性生成排序/填空题入库复习；\n6. 点图行的「默画复习」（或画布工具栏「默画复习」），画布按连接度挖空部分节点，凭记忆填写后交卷——逐点判分回显，错判可「标记正确」人工改判，作答自动推进该图文档的 SM-2 复习调度（体系树 ⏰ 与托盘催办免费跟随）；也可对白泽说「默画这张图」。\n\n**适合场景**：梳理流程与架构、预习建骨架、复盘画部署图、把结构图变成练习、默画复习主动回忆。\n\n**说明**：图生成由当前 Agent 模型完成（消耗模型配额）；mermaid 转画布、图→题与默画投影/判分均为本地确定性变换（零模型调用，mermaid 支持 flowchart/graph 的 TD|LR 子集）；出题入库需要「练习」插件在场（未启用时如实拒）；默画作答走文档复习调度、不入题库；所有写盘过平台共享内核校验，非法图不落盘。",
+      "diagram-studio.display-name": "画图工坊"
+    },
+    "en-US": {
+      "diagram-studio.nav.diagram-studio": "Diagram Studio",
+      "diagram-studio.usage": "**What it does**: a structured diagram studio — four diagram types render differently (shapes / colors / auto-layout), with an interactive canvas inside the plugin page (drag, connect, edit labels, restyle nodes with shapes & colors, undo/redo, one-click auto-layout, PNG export) plus a drawing API the agent drives from chat; mermaid blocks in documents convert to an editable canvas in one click (\"To canvas\"); nodes can link to knowledge-base documents (click the badge to jump), diagrams generate ordering / fill-in-the-blank questions deterministically into the review loop, support blank-out recall practice (active recall on the document's SM-2 schedule), and live as knowledge-base documents exporting to mermaid.\n\n**How to use**:\n1. Sidebar \"Diagram Studio\" → New Diagram (pick a type) → click a row to open the canvas (drag / connect / double-click to edit, select a node to restyle or link a document, Ctrl+Z to undo, auto-layout to tidy, export PNG; save writes back to the document);\n2. Tell Baize \"Draw a login flow: enter account → validate → home\", it calls the drawing API step by step (with shapes & colors) and lays it out automatically;\n3. Tell Baize \"Turn this document into a mindmap\", then keep hand-tuning;\n4. In the document preview, click \"To canvas\" at the top-right of a mermaid block (or tell Baize \"convert this document's diagrams to canvas\") — the mermaid block becomes an editable canvas diagram;\n5. Select a node on the canvas and \"Link doc…\" to chain it to a knowledge-base document (click the 📄 badge to jump; dangling links can be unlinked in one click); tell Baize \"make questions from this diagram\" to deterministically generate ordering / fill-in-the-blank questions into review;\n6. Click the \"Recall\" row action (or the \"Recall\" toolbar button on the canvas): the canvas blanks out some nodes by connectivity — fill them from memory and submit for per-blank grading; false negatives can be fixed with \"Mark correct\", and answers advance the diagram document's SM-2 review schedule (tree ⏰ and tray nudges follow for free). You can also tell Baize \"recall this diagram\".\n\n**When to use**: mapping processes and architecture, sketching before studying, drawing deployment diagrams in review, turning diagrams into practice, blank-out recall for active review.\n\n**Notes**: diagram generation uses the current Agent model (consumes quota); mermaid-to-canvas, diagram-to-questions, and recall projection/grading are local deterministic transforms (zero model calls; mermaid supports the flowchart/graph TD|LR subset); question banking requires the \"Practice\" plugin (declined honestly when absent); recall attempts feed the document review schedule and never enter the question bank; every write passes the platform shared-kernel validation — invalid diagrams are never saved.",
+      "diagram-studio.display-name": "Diagram Studio",
+      "画图工坊": "Diagram Studio",
+      "新建图": "New Diagram",
+      "图名称": "Diagram name",
+      "图类型": "Diagram type",
+      "标题": "Title",
+      "仓库": "Repo",
+      "**能干什么**：结构化画图工坊——四类图型（流程图/架构图/思维导图/协作图）差异化渲染，插件页内置交互画布（拖节点/连线/改文字/换形状颜色/撤销重做/一键自动布局/PNG 导出），agent 对话直操作画图 API，文档里的 mermaid 图块可一键「转画布」变成可编辑画布图，节点可挂链知识文档（角标点击直达），图可确定性出题（排序/填空）入库进复习闭环，图真源存知识库文档，可导出 mermaid。\n\n**怎么用**：\n1. 侧边栏「画图工坊」→ 新建图（选图类型）→ 点列表行进入画布手画（拖拽/连线/双击改字、选中节点换形状颜色/挂文档、Ctrl+Z 撤销、自动布局一键排版、导出 PNG，保存回写文档）；\n2. 对白泽说「画一张登录流程图：输入账号→校验→进入首页」，白泽调画图 API 逐步建图（含形状颜色），生成即自动排版；\n3. 对白泽说「把这篇《文档》生成思维导图」，整体生成后可继续手调；\n4. 文档预览里 mermaid 图右上角「转画布」（或对白泽说「把这篇文档的图转成画布图」），mermaid 块即变可编辑画布图；\n5. 画布里选中节点「挂文档…」把节点链到知识库文档（点 📄 角标直达，悬空可一键解链）；对白泽说「用这张图出题」即确定性生成排序/填空题入库复习；\n6. 点图行的「默画复习」（或画布工具栏「默画复习」），画布按连接度挖空部分节点，凭记忆填写后交卷——逐点判分回显，错判可「标记正确」人工改判，作答自动推进该图文档的 SM-2 复习调度（体系树 ⏰ 与托盘催办免费跟随）；也可对白泽说「默画这张图」。\n\n**适合场景**：梳理流程与架构、预习建骨架、复盘画部署图、把结构图变成练习、默画复习主动回忆。\n\n**说明**：图生成由当前 Agent 模型完成（消耗模型配额）；mermaid 转画布、图→题与默画投影/判分均为本地确定性变换（零模型调用，mermaid 支持 flowchart/graph 的 TD|LR 子集）；出题入库需要「练习」插件在场（未启用时如实拒）；默画作答走文档复习调度、不入题库；所有写盘过平台共享内核校验，非法图不落盘。": "**What it does**: a structured diagram studio — four diagram types render differently (shapes / colors / auto-layout), with an interactive canvas inside the plugin page (drag, connect, edit labels, restyle nodes with shapes & colors, undo/redo, one-click auto-layout, PNG export) plus a drawing API the agent drives from chat; mermaid blocks in documents convert to an editable canvas in one click (\"To canvas\"); nodes can link to knowledge-base documents (click the badge to jump), diagrams generate ordering / fill-in-the-blank questions deterministically into the review loop, support blank-out recall practice (active recall on the document's SM-2 schedule), and live as knowledge-base documents exporting to mermaid.\n\n**How to use**:\n1. Sidebar \"Diagram Studio\" → New Diagram (pick a type) → click a row to open the canvas (drag / connect / double-click to edit, select a node to restyle or link a document, Ctrl+Z to undo, auto-layout to tidy, export PNG; save writes back to the document);\n2. Tell Baize \"Draw a login flow: enter account → validate → home\", it calls the drawing API step by step (with shapes & colors) and lays it out automatically;\n3. Tell Baize \"Turn this document into a mindmap\", then keep hand-tuning;\n4. In the document preview, click \"To canvas\" at the top-right of a mermaid block (or tell Baize \"convert this document's diagrams to canvas\") — the mermaid block becomes an editable canvas diagram;\n5. Select a node on the canvas and \"Link doc…\" to chain it to a knowledge-base document (click the 📄 badge to jump; dangling links can be unlinked in one click); tell Baize \"make questions from this diagram\" to deterministically generate ordering / fill-in-the-blank questions into review;\n6. Click the \"Recall\" row action (or the \"Recall\" toolbar button on the canvas): the canvas blanks out some nodes by connectivity — fill them from memory and submit for per-blank grading; false negatives can be fixed with \"Mark correct\", and answers advance the diagram document's SM-2 review schedule (tree ⏰ and tray nudges follow for free). You can also tell Baize \"recall this diagram\".\n\n**When to use**: mapping processes and architecture, sketching before studying, drawing deployment diagrams in review, turning diagrams into practice, blank-out recall for active review.\n\n**Notes**: diagram generation uses the current Agent model (consumes quota); mermaid-to-canvas, diagram-to-questions, and recall projection/grading are local deterministic transforms (zero model calls; mermaid supports the flowchart/graph TD|LR subset); question banking requires the \"Practice\" plugin (declined honestly when absent); recall attempts feed the document review schedule and never enter the question bank; every write passes the platform shared-kernel validation — invalid diagrams are never saved.",
+      "结构化画图：四类图型差异化渲染（形状/颜色/自动布局），插件页画布手绘（撤销重做/样式面板/PNG 导出）+ agent 对话直操作画图 API，图真源存知识库文档（diagram-json 方言），节点可挂链知识文档、图可确定性出题入库（零 LLM）、可默画复习（主动回忆，SM-2 随文档调度），可导出 mermaid": "Structured diagramming: four diagram types with differentiated rendering (shapes/colors/auto-layout), freehand canvas drawing on the plugin page (undo-redo/style panel/PNG export) + direct diagram-API operation from agent chat. The source of truth for diagrams lives in knowledge-base documents (diagram-json dialect); nodes can link knowledge documents, diagrams can deterministically generate questions into the question bank (zero LLM) and support blind-draw review (active recall, SM-2 scheduled per document); exportable as mermaid."
+    }
+  },
+  "category": "效率工具",
+  "tags": [
+    "画图",
+    "画布",
+    "mermaid",
+    "思维导图",
+    "出题",
+    "默画复习"
+  ]
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "validate",
+      "json": "{\"nodes\":[{\"id\":\"a\",\"label\":\"A\"}],\"edges\":[]}"
+    },
+    "expect": {
+      "outputContains": "通过"
+    }
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "validate",
+      "json": "{\"kind\":\"flowchart\",\"nodes\":[{\"id\":\"a\",\"label\":\"判定\",\"shape\":\"diamond\",\"color\":\"blue\"},{\"id\":\"b\",\"label\":\"兜底\"}],\"edges\":[{\"from\":\"a\",\"to\":\"b\",\"dashed\":true}]}"
+    },
+    "expect": {
+      "outputContains": "通过"
+    },
+    "note": "v2 加法字段（kind/shape/color/dashed）必须过校验闸不破坏结构判定"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "validate",
+      "json": "{\"nodes\":[{\"id\":\"a\"},{\"id\":\"a\"}],\"edges\":[]}"
+    },
+    "expect": {
+      "outputContains": "NODE_ID_DUPLICATE"
+    },
+    "note": "结构化错误码断言：重复 id 必须回执机器错误码"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "add_edge",
+      "path": "不存在的图",
+      "from": "a",
+      "to": "b"
+    },
+    "expect": {
+      "outputContains": "还没有任何图"
+    },
+    "note": "出错路径：无图给可行动指引"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "import_mermaid",
+      "source": "绝不存在的文档XYZQ"
+    },
+    "expect": {
+      "outputContains": "没有找到匹配"
+    },
+    "note": "B1 T1.2 import_mermaid：无匹配源文档给可行动指引（环境无关失败路径）"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "import_mermaid",
+      "source": "不存在的仓库名",
+      "block": 1
+    },
+    "expect": {
+      "outputContains": "没有找到匹配"
+    },
+    "note": "B1 T1.2 import_mermaid：带块序号的同样失败路径确定性回执"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "make_questions",
+      "title": "绝不存在的图XYZQ"
+    },
+    "expect": {
+      "outputContains": "没有找到匹配"
+    },
+    "note": "B3 T3.2 make_questions：无匹配图给可行动指引（环境无关失败路径；成功路径经写门见单测）"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "validate",
+      "json": "{\"nodes\":[{\"id\":\"a\",\"label\":\"甲\",\"docRef\":\"docs/宏观/资产.md\"},{\"id\":\"b\",\"label\":\"乙\"}],\"edges\":[]}"
+    },
+    "expect": {
+      "outputContains": "通过"
+    },
+    "note": "B2 T2.1 diagram-json v3：docRef 挂链锚随图过校验闸不破坏结构判定（存在性归消费方）"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "start_recall",
+      "title": "绝不存在的图XYZQ"
+    },
+    "expect": {
+      "outputContains": "没有找到匹配"
+    },
+    "note": "B4 T4.2 start_recall：无匹配图给可行动指引（环境无关失败路径；挖空投影/判分口径见 lib/recall.js 单测）"
+  },
+  {
+    "tool": "operate_diagram",
+    "args": {
+      "op": "start_recall",
+      "title": ""
+    },
+    "expect": {
+      "outputContains": "没有找到匹配"
+    },
+    "note": "B4 T4.2 start_recall：空关键词确定性不命中（零 LLM 投影红线见单测）"
+  }
+]
